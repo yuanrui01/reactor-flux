@@ -26,7 +26,7 @@ public class ExceptionTest {
                 .onErrorContinue((e, value) -> {
                     System.out.println("error message: " + e.getMessage());
                 })
-                .doOnError(e -> System.out.println(e.getMessage()))
+                .doOnError(e -> System.out.println("axiba" + e.getMessage()))
                 .subscribe(ExceptionTest::printEle);
 
         // Thread.sleep(100000);
