@@ -2,7 +2,6 @@ package org.hypnos.flow;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
 import java.util.Random;
@@ -22,16 +21,17 @@ public class FluxTest1 {
     }
 
     public static void main(String[] args) throws InterruptedException {
+        Random random = new Random();
         Flux<String> letters = Flux
                 .just("A", "B", "C", "D", "E")
-                .flatMap(letter -> {
+                // 使用flatMap可以帮助理解其异步的特征
+                .concatMap(letter -> {
                     if (letter.equals("F")) {
                         return Mono.error(new IllegalLetterException());
-                    } else return Mono.just(letter).delayElement(Duration.ofSeconds(1), Schedulers.boundedElastic());
+                    } else return Mono.just(letter).delayElement(Duration.ofMillis(random.nextInt(1000)));
                 })
                 //.delayElements(Duration.ofSeconds(1), Schedulers.boundedElastic());
 ;
-        Random random = new Random();
         Consumer<String> consumer = letter -> {
             try {
                 Thread.sleep(random.nextInt(500));
